@@ -1,0 +1,210 @@
+/* ===== Base Styles ===== */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Card Appear Animation ===== */
+.card-appear {
+    animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===== Page Transitions ===== */
+.page-content {
+    animation: pageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Navigation Buttons ===== */
+.nav-btn {
+    color: #64748b;
+    background: transparent;
+}
+
+.nav-btn.active {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.nav-btn:hover:not(.active) {
+    color: #475569;
+    background: #f8fafc;
+}
+
+/* ===== Input Focus Ring ===== */
+.input-field:focus {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ===== Select Arrow Fix ===== */
+select.input-field {
+    background-image: none;
+}
+
+/* ===== Loading Spinner ===== */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Table Row Hover ===== */
+#marksBody tr {
+    transition: background-color 0.15s ease;
+}
+
+#marksBody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* ===== Mark Row Slide In ===== */
+.mark-row {
+    animation: markSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes markSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== Status Badge Pulse ===== */
+.status-badge {
+    animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes badgePop {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===== Download Button Shine ===== */
+#downloadBtn {
+    position: relative;
+    overflow: hidden;
+}
+
+#downloadBtn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(255,255,255,0.15) 50%,
+        transparent 100%
+    );
+    transform: rotate(30deg) translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+#downloadBtn:hover::after {
+    transform: rotate(30deg) translateX(100%);
+}
+
+/* ===== Shake Animation (for errors) ===== */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* ===== Grade Badges ===== */
+.grade-a-plus { background: #dcfce7; color: #166534; }
+.grade-a { background: #dcfce7; color: #166534; }
+.grade-b-plus { background: #dbeafe; color: #1e40af; }
+.grade-b { background: #dbeafe; color: #1e40af; }
+.grade-c { background: #fef9c3; color: #854d0e; }
+.grade-d { background: #ffedd5; color: #9a3412; }
+.grade-f { background: #fee2e2; color: #991b1b; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    header, footer, nav, #searchCard, #resetBtn, #downloadBtn {
+        display: none !important;
+    }
+
+    #resultArea {
+        display: block !important;
+    }
+
+    body {
+        background: white !important;
+    }
+}
+
+/* ===== Mobile Responsive Tweaks ===== */
+@media (max-width: 400px) {
+    #marksBody th,
+    #marksBody td {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* ===== Focus Visible ===== */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
