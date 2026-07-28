@@ -45,6 +45,27 @@ app.get('/debug', (_, res) => {
     });
 });
 
+// Debug: check student DOB format
+app.get('/debug/student/:id', async (req, res) => {
+    try {
+        const headers = authHeaders();
+        const stuR = await fetch(`${API_BASE}/api/students/?search=${encodeURIComponent(req.params.id)}`, { headers });
+        const stuD = await stuR.json();
+        const student = (stuD.data || []).find(s => s.student_id === req.params.id);
+        if (!student) return res.json({ found: false, raw: stuD });
+        res.json({
+            found: true,
+            student_id: student.student_id,
+            dob_raw: student.dob,
+            dob_type: typeof student.dob,
+            dob_date: new Date(student.dob).toISOString(),
+            dob_slice: String(student.dob).slice(0, 10),
+            name: student.name,
+            id: student.id
+        });
+    } catch (err) { res.json({ error: err.message }); }
+});
+
 // ---- Published exams ----
 app.get('/api/exams', async (_, res) => {
     try {
