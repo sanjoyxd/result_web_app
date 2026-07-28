@@ -27,7 +27,8 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -35,11 +36,14 @@
 <body class="bg-surface-50 min-h-screen font-sans antialiased text-slate-800">
 
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500">
+    <div id="loadingOverlay"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500">
         <div class="text-center">
             <div class="relative mb-5">
                 <div class="w-14 h-14 border-[3px] border-brand-100 rounded-full"></div>
-                <div class="absolute top-0 left-0 w-14 h-14 border-[3px] border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                <div
+                    class="absolute top-0 left-0 w-14 h-14 border-[3px] border-brand-600 border-t-transparent rounded-full animate-spin">
+                </div>
             </div>
             <p class="text-sm font-semibold text-slate-400 tracking-wide">Loading portal...</p>
         </div>
@@ -52,7 +56,8 @@
         <header class="w-full bg-white border-b border-slate-200/80 sticky top-0 z-40">
             <div class="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div id="schoolLogoWrap" class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+                    <div id="schoolLogoWrap"
+                        class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                         <i class="fas fa-graduation-cap text-brand-500 text-base" id="logoPlaceholder"></i>
                         <img id="schoolLogo" class="w-full h-full object-contain hidden" alt="School Logo">
                     </div>
@@ -62,10 +67,12 @@
                     </div>
                 </div>
                 <nav class="flex bg-slate-100/80 rounded-lg p-0.5">
-                    <button id="navResult" onclick="navigateTo('result')" class="nav-btn active px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
+                    <button id="navResult" onclick="navigateTo('result')"
+                        class="nav-btn active px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
                         <i class="fas fa-search mr-1.5"></i>Result
                     </button>
-                    <button id="navVerify" onclick="navigateTo('verify')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
+                    <button id="navVerify" onclick="navigateTo('verify')"
+                        class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
                         <i class="fas fa-shield-halved mr-1.5"></i>Verify
                     </button>
                 </nav>
@@ -79,25 +86,36 @@
             <section id="pageResult" class="page-content">
 
                 <!-- Hero Banner -->
-                <div class="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-700 to-indigo-800 p-6 sm:p-8 shadow-xl shadow-brand-600/20 card-appear">
-                    <div class="absolute inset-0 opacity-[0.07]" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+                <div
+                    class="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-700 to-indigo-800 p-6 sm:p-8 shadow-xl shadow-brand-600/20 card-appear">
+                    <div class="absolute inset-0 opacity-[0.07]"
+                        style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);">
+                    </div>
                     <div class="relative">
-                        <div class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 mb-4">
+                        <div
+                            class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 mb-4">
                             <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                            <span class="text-[11px] font-semibold text-white/90 tracking-wide">Academic Year Active</span>
+                            <span class="text-[11px] font-semibold text-white/90 tracking-wide">Academic Year
+                                Active</span>
                         </div>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-2">Find Your Result</h2>
-                        <p class="text-sm text-white/70 font-medium max-w-md">Enter your student details below to view exam results, marks, and grades.</p>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-2">Find Your Result
+                        </h2>
+                        <p class="text-sm text-white/70 font-medium max-w-md">Enter your student details below to view
+                            exam results, marks, and grades.</p>
                     </div>
                 </div>
 
                 <!-- Search Form Card -->
-                <div id="searchCard" class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden card-appear">
+                <div id="searchCard"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden card-appear">
                     <form id="searchForm" class="p-6 sm:p-8 space-y-5">
                         <div>
-                            <label for="studentId" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Student ID</label>
+                            <label for="studentId"
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Student
+                                ID</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <span
+                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                     <i class="fas fa-id-card text-sm"></i>
                                 </span>
                                 <input type="text" id="studentId" required
@@ -107,9 +125,12 @@
                         </div>
 
                         <div>
-                            <label for="dob" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Date of Birth</label>
+                            <label for="dob"
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Date of
+                                Birth</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <span
+                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                     <i class="fas fa-calendar-days text-sm"></i>
                                 </span>
                                 <input type="date" id="dob" required
@@ -118,23 +139,27 @@
                         </div>
 
                         <div>
-                            <label for="examType" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Examination</label>
+                            <label for="examType"
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Examination</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <span
+                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                     <i class="fas fa-award text-sm"></i>
                                 </span>
                                 <select id="examType" required
                                     class="input-field w-full pl-11 pr-10 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400 outline-none transition-all duration-200 appearance-none bg-white">
                                     <option value="" disabled selected>Loading exams...</option>
                                 </select>
-                                <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                                <span
+                                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
                                     <i class="fas fa-chevron-down text-[10px]"></i>
                                 </span>
                             </div>
                         </div>
 
                         <!-- Error -->
-                        <div id="errorMessage" class="hidden rounded-xl bg-red-50 border border-red-100 p-4 text-sm text-red-700 font-medium">
+                        <div id="errorMessage"
+                            class="hidden rounded-xl bg-red-50 border border-red-100 p-4 text-sm text-red-700 font-medium">
                             <div class="flex items-start gap-2.5">
                                 <i class="fas fa-circle-exclamation mt-0.5 flex-shrink-0"></i>
                                 <span id="errorText"></span>
@@ -160,7 +185,8 @@
 
                         <div class="px-6 py-5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
-                                <div id="resultAvatar" class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                <div id="resultAvatar"
+                                    class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center overflow-hidden flex-shrink-0">
                                     <i class="fas fa-user-graduate text-brand-400 text-xl"></i>
                                     <img id="resultPhoto" class="w-full h-full object-cover hidden" alt="">
                                 </div>
@@ -177,11 +203,21 @@
                             <table id="marksTable" class="w-full text-sm">
                                 <thead>
                                     <tr class="border-y border-slate-100">
-                                        <th class="px-6 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Subject</th>
-                                        <th id="thTheory" class="px-4 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">Theory</th>
-                                        <th id="thPractical" class="px-4 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">Practical</th>
-                                        <th class="px-4 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">Total</th>
-                                        <th class="px-6 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">Grade</th>
+                                        <th
+                                            class="px-6 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">
+                                            Subject</th>
+                                        <th id="thTheory"
+                                            class="px-4 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                            Theory</th>
+                                        <th id="thPractical"
+                                            class="px-4 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                            Practical</th>
+                                        <th
+                                            class="px-4 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                            Total</th>
+                                        <th
+                                            class="px-6 py-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                            Grade</th>
                                     </tr>
                                 </thead>
                                 <tbody id="marksBody"></tbody>
@@ -192,15 +228,18 @@
                         <div class="px-6 py-5 border-t border-slate-100">
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="text-center p-3 rounded-xl bg-slate-50">
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Obtained</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+                                        Obtained</p>
                                     <p id="resultObtained" class="text-xl font-extrabold text-slate-900"></p>
                                 </div>
                                 <div class="text-center p-3 rounded-xl bg-brand-50">
-                                    <p class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Percentage</p>
+                                    <p class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">
+                                        Percentage</p>
                                     <p id="resultPercentage" class="text-xl font-extrabold text-brand-600"></p>
                                 </div>
                                 <div class="text-center p-3 rounded-xl bg-brand-50">
-                                    <p class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Division</p>
+                                    <p class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">
+                                        Division</p>
                                     <p id="resultDivision" class="text-xl font-extrabold text-brand-700"></p>
                                 </div>
                             </div>
@@ -222,18 +261,22 @@
                     </div>
 
                     <!-- Promotion Info (if available) -->
-                    <div id="promoCard" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+                    <div id="promoCard"
+                        class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
                         <div class="h-1 bg-gradient-to-r from-amber-400 to-amber-500"></div>
                         <div class="p-5 flex items-start gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-clipboard-check text-amber-500"></i>
                             </div>
                             <div>
-                                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Promotion Status</h3>
+                                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Promotion Status
+                                </h3>
                                 <p id="promoStatus" class="text-sm font-bold mt-1.5"></p>
                                 <p id="promoRemarks" class="text-xs text-slate-500 mt-1"></p>
                                 <div id="promoAttendance" class="hidden mt-2 text-xs text-slate-400 font-medium">
-                                    <span><i class="fas fa-calendar-check mr-1"></i>Attendance: <span id="promoDays"></span></span>
+                                    <span><i class="fas fa-calendar-check mr-1"></i>Attendance: <span
+                                            id="promoDays"></span></span>
                                 </div>
                             </div>
                         </div>
@@ -245,24 +288,34 @@
             <section id="pageVerify" class="page-content hidden">
 
                 <!-- Verify Hero -->
-                <div class="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-6 sm:p-8 shadow-xl shadow-emerald-600/20 card-appear">
-                    <div class="absolute inset-0 opacity-[0.07]" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+                <div
+                    class="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-6 sm:p-8 shadow-xl shadow-emerald-600/20 card-appear">
+                    <div class="absolute inset-0 opacity-[0.07]"
+                        style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);">
+                    </div>
                     <div class="relative">
-                        <div class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 mb-4">
+                        <div
+                            class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 mb-4">
                             <i class="fas fa-lock text-[10px] text-white/90"></i>
                             <span class="text-[11px] font-semibold text-white/90 tracking-wide">Authenticated</span>
                         </div>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-2">Verify Marksheet</h2>
-                        <p class="text-sm text-white/70 font-medium max-w-md">Scan or enter the verification code from the QR code on the marksheet.</p>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-2">Verify Marksheet
+                        </h2>
+                        <p class="text-sm text-white/70 font-medium max-w-md">Scan or enter the verification code from
+                            the QR code on the marksheet.</p>
                     </div>
                 </div>
 
-                <div id="verifyFormCard" class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+                <div id="verifyFormCard"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
                     <form id="verifyForm" class="p-6 sm:p-8 space-y-5">
                         <div>
-                            <label for="verifyToken" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Verification Code</label>
+                            <label for="verifyToken"
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Verification
+                                Code</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <span
+                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                     <i class="fas fa-qrcode text-sm"></i>
                                 </span>
                                 <input type="text" id="verifyToken" required
@@ -271,7 +324,8 @@
                             </div>
                         </div>
 
-                        <div id="verifyError" class="hidden rounded-xl bg-red-50 border border-red-100 p-4 text-sm text-red-700 font-medium">
+                        <div id="verifyError"
+                            class="hidden rounded-xl bg-red-50 border border-red-100 p-4 text-sm text-red-700 font-medium">
                             <div class="flex items-start gap-2.5">
                                 <i class="fas fa-circle-exclamation mt-0.5 flex-shrink-0"></i>
                                 <span id="verifyErrorText"></span>
@@ -291,7 +345,8 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden card-appear">
                         <div class="h-1 bg-gradient-to-r from-emerald-400 to-emerald-500"></div>
                         <div class="px-6 py-5 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
                                 <i class="fas fa-circle-check text-emerald-500"></i>
                             </div>
                             <div>
@@ -301,11 +356,13 @@
                         </div>
                         <div class="px-6 pb-6 space-y-0">
                             <div class="flex justify-between items-center py-3 border-b border-slate-100">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Student Name</span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Student
+                                    Name</span>
                                 <span id="verifyStudentName" class="text-sm font-bold text-slate-800"></span>
                             </div>
                             <div class="flex justify-between items-center py-3 border-b border-slate-100">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Roll Number</span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Roll
+                                    Number</span>
                                 <span id="verifyRoll" class="text-sm font-bold text-slate-800"></span>
                             </div>
                             <div class="flex justify-between items-center py-3 border-b border-slate-100">
@@ -317,7 +374,8 @@
                                 <span id="verifyExam" class="text-sm font-bold text-slate-800"></span>
                             </div>
                             <div class="flex justify-between items-center py-3">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Student ID</span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Student
+                                    ID</span>
                                 <span id="verifyStudentId" class="text-sm font-bold text-brand-600"></span>
                             </div>
                         </div>
@@ -338,13 +396,14 @@
             <div class="max-w-2xl mx-auto px-4 sm:px-6 py-6">
                 <div class="flex flex-col items-center gap-3">
                     <p class="text-xs text-slate-400 font-medium">
-                        &copy; <span id="footerYear"></span> <span id="footerSchool">Assam Brilliant Academy</span>. All rights reserved.
+                        &copy; <span id="footerYear"></span> <span id="footerSchool">Assam Brilliant Academy</span>. All
+                        rights reserved.
                     </p>
                     <div class="flex items-center gap-1.5 text-[11px] text-slate-300">
-                        <span>Built with</span>
-                        <i class="fas fa-heart text-brand-400 text-[10px]"></i>
-                        <span>by</span>
-                        <a href="https://github.com/sanjoyxd" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 hover:text-brand-600 transition-colors">Sanjoy Das</a>
+                        <span>Designed & Developed by</span>
+                        <a href="https://github.com/sanjoyxd" target="_blank" rel="noopener noreferrer"
+                            class="font-semibold text-slate-500 hover:text-brand-600 transition-colors">Sanjoy
+                            Choudhury</a>
                     </div>
                 </div>
             </div>
