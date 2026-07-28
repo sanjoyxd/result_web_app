@@ -78,8 +78,14 @@ app.get('/api/results', async (req, res) => {
         const student = (stuD.data || []).find(s => s.student_id === studentId);
         if (!student) return res.status(404).json({ success: false, message: 'Student not found.' });
 
-        // 2. Verify DOB
-        if (student.dob !== dob) return res.status(404).json({ success: false, message: 'Date of birth does not match.' });
+        // 2. Verify DOB (normalize formats: "2010-05-15", "2010-05-15T00:00:00", "Mon, 15 May 2010" etc.)
+        const normalizeDate = (d) => { if (!d) return ''; const dt = new Date(d); return isNaN(dt) ? String(d).slice(0,10) : dt.toISOString().slice(0,10); };
+        const apiDob = normalizeDate(student.dob);
+        const reqDob = normalizeDate(dob);
+        if (apiDob !== reqDob) {
+            console.error(`[API] DOB mismatch: API=${apiDob} (${typeof student.dob}=${student.dob}) Request=${reqDob}`);
+            return res.status(404).json({ success: false, message: 'Date of birth does not match.' });
+        }
 
         // 3. Active session
         const sessR = await fetch(`${API_BASE}/api/academics/sessions`, { headers });
