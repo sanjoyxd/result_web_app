@@ -48,6 +48,15 @@
             <p class="text-sm font-semibold text-slate-400 tracking-wide">Loading portal...</p>
         </div>
     </div>
+    <script>
+        // Fallback: hide overlay even if external scripts fail to load
+        setTimeout(function() {
+            var el = document.getElementById('loadingOverlay');
+            var ap = document.getElementById('app');
+            if (el) { el.style.opacity = '0'; el.style.pointerEvents = 'none'; }
+            if (ap) { ap.style.opacity = '1'; }
+        }, 1500);
+    </script>
 
     <!-- Main App -->
     <div id="app" class="opacity-0 transition-opacity duration-700">
