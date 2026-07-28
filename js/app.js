@@ -374,6 +374,18 @@
         dom.verifyExam.textContent = data.exam_name || data.examName || '';
         dom.verifyStudentId.textContent = data.student_id || data.studentId || '';
 
+        const verifyPdfBtn = $('verifyPdfBtn');
+        if (verifyPdfBtn) {
+            const examId = data.exam_id || data.examId;
+            const studentId = data.student_id || data.studentId;
+            if (examId && studentId) {
+                verifyPdfBtn.href = api.getPdfUrl(examId, studentId);
+                verifyPdfBtn.classList.remove('hidden');
+            } else {
+                verifyPdfBtn.classList.add('hidden');
+            }
+        }
+
         dom.verifyFormCard.classList.add('hidden');
         dom.verifyResult.classList.remove('hidden');
     }
