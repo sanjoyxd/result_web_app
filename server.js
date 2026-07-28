@@ -302,6 +302,18 @@ app.get('/api/pdf/:examId/:studentId', async (req, res) => {
     }
 });
 
+// ---- Render HTML verification from BaaS ----
+app.get('/verify-marksheet/:token', async (req, res) => {
+    try {
+        const r = await fetch(`${API_BASE}/api/reports/verify-html/${req.params.token}`);
+        if (!r.ok) return res.status(404).send('Invalid or expired QR code.');
+        const html = await r.text();
+        res.send(html);
+    } catch (e) {
+        res.status(502).send('Verification service unavailable');
+    }
+});
+
 // ---- SPA fallback ----
 app.get('*', (req, res) => {
     if (['/api', '/static', '/health'].some(p => req.path.startsWith(p))) return res.status(404).json({ message: 'Not found' });
