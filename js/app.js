@@ -353,11 +353,18 @@
     async function verify(token) {
         dom.verifyError.classList.add('hidden');
         try {
-            const data = await api.verifyMarksheet(token);
+            const data = await withTimeout(api.verifyMarksheet(token), 20000);
             renderVerifyResult(data);
         } catch (err) {
             showVerifyError(err.message);
         }
+    }
+
+    function withTimeout(promise, ms) {
+        return Promise.race([
+            promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Request timed out')), ms))
+        ]);
     }
 
     function renderVerifyResult(data) {

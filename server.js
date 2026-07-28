@@ -228,9 +228,15 @@ app.get('/api/teachers/settings', async (_, res) => {
 // ---- Marksheet verification ----
 app.get('/api/reports/verify/:token', async (req, res) => {
     try {
-        const r = await fetch(`${API_BASE}/api/reports/verify/${req.params.token}`, { headers: { 'Accept': 'application/json' } });
+        const ac = new AbortController();
+        const to = setTimeout(() => ac.abort(), 15000);
+        const r = await fetch(`${API_BASE}/api/reports/verify/${req.params.token}`, { signal: ac.signal, headers: { 'Accept': 'application/json' } });
+        clearTimeout(to);
         res.status(r.status).json(await r.json());
-    } catch { res.status(502).json({ success: false, message: 'Verification service unavailable' }); }
+    } catch (e) {
+        if (e.name === 'AbortError') return res.status(504).json({ success: false, message: 'Verification upstream timed out' });
+        res.status(502).json({ success: false, message: 'Verification service unavailable' });
+    }
 });
 
 // ---- Static files proxy ----
