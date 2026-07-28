@@ -33,12 +33,29 @@ function authHeaders() {
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }));
 
+// Debug: check config (remove after debugging)
+app.get('/debug', (_, res) => {
+    res.json({
+        apiBase: API_BASE,
+        hasJwtSecret: !!process.env.JWT_SECRET,
+        secretLength: JWT_SECRET.length,
+        serviceUserId: SERVICE_USER_ID,
+        serviceRole: SERVICE_ROLE,
+        testToken: generateServiceToken().substring(0, 20) + '...'
+    });
+});
+
 // ---- Published exams ----
 app.get('/api/exams', async (_, res) => {
     try {
         const r = await fetch(`${API_BASE}/api/exams/`, { headers: authHeaders() });
         const data = await r.json();
+        if (!r.ok || data.success === false) {
+            console.error('[API] /api/exams upstream error:', r.status, JSON.stringify(data));
+            return res.status(502).json({ success: false, message: data.message || `Upstream API returned ${r.status}` });
+        }
         const exams = (data.data || []).filter(e => e.is_published).map(e => ({ id: e.id, name: e.name }));
+        console.log(`[API] /api/exams: found ${exams.length} published exams`);
         res.json(exams);
     } catch (err) {
         console.error('[API] /api/exams:', err.message);
