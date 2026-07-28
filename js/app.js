@@ -386,6 +386,7 @@
             }
         }
 
+        dom.verifyError.classList.add('hidden');
         dom.verifyFormCard.classList.add('hidden');
         dom.verifyResult.classList.remove('hidden');
     }
@@ -416,10 +417,7 @@
             { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 },
             async (decodedText) => {
                 stopScanner();
-                showVerifyError('Verifying...');
-                dom.verifyError.classList.remove('hidden', 'bg-red-50', 'border-red-100', 'text-red-700');
-                dom.verifyError.classList.add('bg-emerald-50', 'border-emerald-100', 'text-emerald-700');
-                dom.verifyErrorText.textContent = 'QR scanned! Verifying...';
+                showVerifyError('QR scanned! Verifying...');
                 const token = extractTokenFromUrl(decodedText);
                 await verify(token);
             },
