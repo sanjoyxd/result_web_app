@@ -80,7 +80,7 @@
         </header>
 
         <!-- Content Area -->
-        <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 pb-16">
+        <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 pb-4">
 
             <!-- ==================== RESULT LOOKUP PAGE ==================== -->
             <section id="pageResult" class="page-content">
@@ -316,11 +316,11 @@
                             <div class="relative">
                                 <span
                                     class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                                    <i class="fas fa-qrcode text-sm"></i>
+                                    <i class="fas fa-link text-sm"></i>
                                 </span>
                                 <input type="text" id="verifyToken" required
                                     class="input-field w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 placeholder-slate-300 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 outline-none transition-all duration-200"
-                                    placeholder="Paste the verification code">
+                                    placeholder="Paste the verification code or link">
                             </div>
                         </div>
 
@@ -337,7 +337,35 @@
                             <i class="fas fa-magnifying-glass"></i>
                             <span id="verifyBtnText">Verify</span>
                         </button>
+
+                        <div class="relative flex items-center gap-3">
+                            <div class="flex-1 h-px bg-slate-200"></div>
+                            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">or</span>
+                            <div class="flex-1 h-px bg-slate-200"></div>
+                        </div>
+
+                        <button type="button" id="scanQrBtn"
+                            class="w-full py-3.5 px-4 rounded-xl border-2 border-dashed border-emerald-200 bg-emerald-50/50 text-emerald-700 font-bold text-sm hover:bg-emerald-50 hover:border-emerald-300 transition-all duration-200 flex items-center justify-center gap-2.5">
+                            <i class="fas fa-camera"></i>
+                            <span>Scan QR Code</span>
+                        </button>
                     </form>
+                </div>
+
+                <!-- QR Scanner Overlay -->
+                <div id="qrScannerOverlay" class="hidden fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl overflow-hidden w-full max-w-sm shadow-2xl">
+                        <div class="flex items-center justify-between px-5 py-3 bg-slate-50 border-b border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-800">Scan QR Code</h3>
+                            <button id="closeScannerBtn" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center transition-colors">
+                                <i class="fas fa-xmark text-slate-600 text-sm"></i>
+                            </button>
+                        </div>
+                        <div id="qrReader" class="w-full" style="min-height: 280px;"></div>
+                        <div class="px-5 py-3 text-center bg-slate-50 border-t border-slate-200">
+                            <p class="text-xs text-slate-400 font-medium">Point your camera at the QR code on the marksheet</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Verify Result -->
@@ -412,6 +440,7 @@
 
     <script src="js/api.js"></script>
     <script src="js/app.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </body>
 
 </html>

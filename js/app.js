@@ -59,7 +59,11 @@
         logoPlaceholder: $('logoPlaceholder'),
         schoolName: $('schoolName'),
         footerSchool: $('footerSchool'),
-        footerYear: $('footerYear')
+        footerYear: $('footerYear'),
+        scanQrBtn: $('scanQrBtn'),
+        closeScannerBtn: $('closeScannerBtn'),
+        qrScannerOverlay: $('qrScannerOverlay'),
+        qrReader: $('qrReader')
     };
 
     let cachedExams = [];
@@ -389,6 +393,52 @@
         dom.verifyFormCard.classList.remove('hidden');
         dom.verifyResult.classList.add('hidden');
     };
+
+    /* ============================================================
+       QR Scanner
+       ============================================================ */
+    let html5QrCode = null;
+
+    function extractTokenFromUrl(text) {
+        const match = text.match(/\/verify-marksheet\/([^/?#]+)/);
+        if (match) return decodeURIComponent(match[1]);
+        return text.trim();
+    }
+
+    function startScanner() {
+        dom.qrScannerOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        if (!html5QrCode) {
+            html5QrCode = new Html5Qrcode('qrReader');
+        }
+
+        html5QrCode.start(
+            { facingMode: 'environment' },
+            { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 },
+            (decodedText) => {
+                stopScanner();
+                const token = extractTokenFromUrl(decodedText);
+                dom.verifyToken.value = token;
+                dom.verifyBtn.click();
+            },
+            () => {}
+        ).catch(() => {
+            showVerifyError('Camera access denied or not available. Please paste the code manually.');
+            stopScanner();
+        });
+    }
+
+    function stopScanner() {
+        dom.qrScannerOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().catch(() => {});
+        }
+    }
+
+    dom.scanQrBtn.addEventListener('click', startScanner);
+    dom.closeScannerBtn.addEventListener('click', stopScanner);
 
     /* ============================================================
        UI Helpers
