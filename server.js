@@ -231,6 +231,46 @@ app.use('/static', async (req, res) => {
     } catch { res.status(404).end(); }
 });
 
+// ---- PDF on-the-fly generation ----
+app.get('/api/pdf/:examId/:studentId', async (req, res) => {
+    const { examId, studentId } = req.params;
+    const headers = authHeaders();
+    try {
+        const stuR = await fetch(`${API_BASE}/api/students/?search=${encodeURIComponent(studentId)}`, { headers });
+        const stuD = await stuR.json();
+        const stub = (stuD.data || []).find(s => s.student_id === studentId);
+        if (!stub) return res.status(404).json({ success: false, message: 'Student not found.' });
+
+        const detR = await fetch(`${API_BASE}/api/students/${stub.id}`, { headers });
+        const detD = await detR.json();
+        const detail = detD.data || detD;
+        const currentClass = detail.current_class || '';
+
+        const sessR = await fetch(`${API_BASE}/api/academics/sessions`, { headers });
+        const sessD = await sessR.json();
+        const activeSession = (sessD.data || []).find(s => s.is_active);
+        if (!activeSession) return res.status(404).json({ success: false, message: 'No active session.' });
+
+        const consR = await fetch(`${API_BASE}/api/marks/consolidated/${encodeURIComponent(currentClass)}/${examId}`, { headers });
+        const consD = await consR.json();
+        const consStudents = (consD.data || {}).students || [];
+        const match = consStudents.find(s => s.student_id === studentId);
+        if (!match) return res.status(404).json({ success: false, message: 'Enrollment not found.' });
+
+        const pdfR = await fetch(`${API_BASE}/api/reports/single/${match.id}/${examId}`, { headers });
+        if (!pdfR.ok) {
+            const err = await pdfR.json().catch(() => ({}));
+            return res.status(pdfR.status).json(err);
+        }
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename=ABA_${studentId}.pdf`);
+        pdfR.body.pipe(res);
+    } catch (e) {
+        console.error('[PDF]', e.message);
+        res.status(502).json({ success: false, message: 'PDF service unavailable' });
+    }
+});
+
 // ---- SPA fallback ----
 app.get('*', (req, res) => {
     if (['/api', '/static', '/health'].some(p => req.path.startsWith(p))) return res.status(404).json({ message: 'Not found' });
