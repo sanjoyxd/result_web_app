@@ -50,20 +50,20 @@ app.get('/debug/student/:id', async (req, res) => {
     try {
         const headers = authHeaders();
         const stuR = await fetch(`${API_BASE}/api/students/?search=${encodeURIComponent(req.params.id)}`, { headers });
-        const stuD = await stuR.json();
-        const student = (stuD.data || []).find(s => s.student_id === req.params.id);
-        if (!student) return res.json({ found: false, raw: stuD });
+        const raw = await stuR.json();
+        const students = raw.data || [];
+        const student = students.find(s => s.student_id === req.params.id);
+        if (!student) return res.json({ found: false, apiStatus: stuR.status, apiResponse: raw });
         res.json({
             found: true,
             student_id: student.student_id,
             dob_raw: student.dob,
             dob_type: typeof student.dob,
-            dob_date: new Date(student.dob).toISOString(),
-            dob_slice: String(student.dob).slice(0, 10),
+            dob_string: String(student.dob),
             name: student.name,
-            id: student.id
+            allKeys: Object.keys(student)
         });
-    } catch (err) { res.json({ error: err.message }); }
+    } catch (err) { res.json({ error: err.message, stack: err.stack }); }
 });
 
 // ---- Published exams ----
@@ -99,12 +99,11 @@ app.get('/api/results', async (req, res) => {
         const student = (stuD.data || []).find(s => s.student_id === studentId);
         if (!student) return res.status(404).json({ success: false, message: 'Student not found.' });
 
-        // 2. Verify DOB (normalize formats: "2010-05-15", "2010-05-15T00:00:00", "Mon, 15 May 2010" etc.)
-        const normalizeDate = (d) => { if (!d) return ''; const dt = new Date(d); return isNaN(dt) ? String(d).slice(0,10) : dt.toISOString().slice(0,10); };
-        const apiDob = normalizeDate(student.dob);
-        const reqDob = normalizeDate(dob);
+        // 2. Verify DOB (just compare the first 10 chars of whatever format)
+        const apiDob = String(student.dob || '').slice(0, 10);
+        const reqDob = String(dob || '').slice(0, 10);
         if (apiDob !== reqDob) {
-            console.error(`[API] DOB mismatch: API=${apiDob} (${typeof student.dob}=${student.dob}) Request=${reqDob}`);
+            console.error(`[API] DOB mismatch: API="${apiDob}" Request="${reqDob}" raw_api="${student.dob}"`);
             return res.status(404).json({ success: false, message: 'Date of birth does not match.' });
         }
 
