@@ -243,10 +243,23 @@ app.use('/static', async (req, res) => {
     } catch { res.status(404).end(); }
 });
 
-// ---- PDF on-the-fly generation ----
+// ---- PDF serving: pre-generated first, on-the-fly fallback ----
 app.get('/api/pdf/:examId/:studentId', async (req, res) => {
     const { examId, studentId } = req.params;
     const headers = authHeaders();
+
+    // 1. Try pre-generated static PDF (fast, served from disk)
+    try {
+        const staticR = await fetch(`${API_BASE}/api/reports/static/${examId}/${encodeURIComponent(studentId)}`);
+        if (staticR.ok) {
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Cache-Control', 'public, max-age=86400');
+            res.setHeader('Content-Disposition', `inline; filename=ABA_${studentId}.pdf`);
+            return staticR.body.pipe(res);
+        }
+    } catch {}
+
+    // 2. Fallback: generate on-the-fly (slow)
     try {
         const stuR = await fetch(`${API_BASE}/api/students/?search=${encodeURIComponent(studentId)}`, { headers });
         const stuD = await stuR.json();
