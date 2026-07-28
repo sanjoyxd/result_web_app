@@ -33,7 +33,7 @@ const api = {
     },
 
     getPdfUrl(examId, studentId) {
-        return `/static/results/${examId}/${encodeURIComponent(studentId)}.pdf`;
+        return `/api/reports/static/${examId}/${encodeURIComponent(studentId)}`;
     },
 
     async verifyMarksheet(token) {
