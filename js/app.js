@@ -42,10 +42,6 @@
         pageVerify: $('pageVerify'),
         navResult: $('navResult'),
         navVerify: $('navVerify'),
-        verifyForm: $('verifyForm'),
-        verifyToken: $('verifyToken'),
-        verifyBtn: $('verifyBtn'),
-        verifyBtnText: $('verifyBtnText'),
         verifyError: $('verifyError'),
         verifyErrorText: $('verifyErrorText'),
         verifyResult: $('verifyResult'),
@@ -80,8 +76,7 @@
         if (verifyMatch) {
             const token = decodeURIComponent(verifyMatch[1]);
             navigateTo('verify');
-            dom.verifyToken.value = token;
-            dom.verifyBtn.click();
+            setTimeout(() => verify(token), 600);
         }
 
         setTimeout(() => {
@@ -350,31 +345,17 @@
     }
 
     /* ============================================================
-       Verify Page
+       Verify
        ============================================================ */
-    dom.verifyForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const token = dom.verifyToken.value.trim();
-        if (!token) {
-            showVerifyError('Please enter a verification code.');
-            return;
-        }
-
-        dom.verifyBtn.disabled = true;
-        dom.verifyBtnText.textContent = 'Verifying...';
+    async function verify(token) {
         dom.verifyError.classList.add('hidden');
-
         try {
             const data = await api.verifyMarksheet(token);
             renderVerifyResult(data);
         } catch (err) {
             showVerifyError(err.message);
-        } finally {
-            dom.verifyBtn.disabled = false;
-            dom.verifyBtnText.textContent = 'Verify';
         }
-    });
+    }
 
     function renderVerifyResult(data) {
         dom.verifyStudentName.textContent = data.student_name || data.studentName || '';
@@ -401,40 +382,35 @@
 
     function extractTokenFromUrl(text) {
         const match = text.match(/\/verify-marksheet\/([^/?#]+)/);
-        if (match) return decodeURIComponent(match[1]);
-        return text.trim();
+        return match ? decodeURIComponent(match[1]) : text.trim();
     }
 
     function startScanner() {
         dom.qrScannerOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-
-        if (!html5QrCode) {
-            html5QrCode = new Html5Qrcode('qrReader');
-        }
+        if (!html5QrCode) html5QrCode = new Html5Qrcode('qrReader');
 
         html5QrCode.start(
             { facingMode: 'environment' },
             { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 },
-            (decodedText) => {
+            async (decodedText) => {
                 stopScanner();
+                showVerifyError('Verifying...');
+                dom.verifyError.classList.remove('hidden', 'bg-red-50', 'border-red-100', 'text-red-700');
+                dom.verifyError.classList.add('bg-emerald-50', 'border-emerald-100', 'text-emerald-700');
+                dom.verifyErrorText.textContent = 'QR scanned! Verifying...';
                 const token = extractTokenFromUrl(decodedText);
-                dom.verifyToken.value = token;
-                dom.verifyBtn.click();
+                await verify(token);
             },
             () => {}
         ).catch(() => {
-            showVerifyError('Camera access denied or not available. Please paste the code manually.');
+            showVerifyError('Camera access denied or not available.');
             stopScanner();
         });
     }
 
     function stopScanner() {
         dom.qrScannerOverlay.classList.add('hidden');
-        document.body.style.overflow = '';
-        if (html5QrCode && html5QrCode.isScanning) {
-            html5QrCode.stop().catch(() => {});
-        }
+        if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop().catch(() => {});
     }
 
     dom.scanQrBtn.addEventListener('click', startScanner);
@@ -457,6 +433,9 @@
 
     function showVerifyError(msg) {
         dom.verifyErrorText.textContent = msg;
+        dom.verifyError.className = 'rounded-xl border p-4 text-sm font-medium ';
+        const isError = msg !== 'Verifying...';
+        dom.verifyError.classList.add(isError ? 'bg-red-50 border-red-100 text-red-700' : 'bg-emerald-50 border-emerald-100 text-emerald-700');
         dom.verifyError.classList.remove('hidden');
     }
 
