@@ -81,7 +81,10 @@
 
         setTimeout(() => {
             dom.loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
+            dom.loadingOverlay.style.opacity = '0';
+            dom.loadingOverlay.style.pointerEvents = 'none';
             dom.app.classList.remove('opacity-0');
+            dom.app.style.opacity = '1';
         }, 400);
     }
 
