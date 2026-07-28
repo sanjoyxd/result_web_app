@@ -71,6 +71,15 @@
         dom.footerYear.textContent = new Date().getFullYear();
         loadSchoolSettings();
         loadExams();
+
+        const verifyMatch = window.location.pathname.match(/^\/verify-marksheet\/(.+)$/);
+        if (verifyMatch) {
+            const token = decodeURIComponent(verifyMatch[1]);
+            navigateTo('verify');
+            dom.verifyToken.value = token;
+            dom.verifyBtn.click();
+        }
+
         setTimeout(() => {
             dom.loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
             dom.app.classList.remove('opacity-0');
