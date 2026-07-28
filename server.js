@@ -136,7 +136,8 @@ app.get('/api/results', async (req, res) => {
         const subjects = consolidated.subjects || [];
         const matrix = consolidated.matrix || {};
         const configMap = consolidated.config_map || {};
-        const isCalculated = exam.is_calculated || false;
+        const rules = consolidated.rules || [];
+        const isAggregated = rules.length > 0;
 
         // 6. Find enrollment ID from consolidated students list
         const consStudents = consolidated.students || [];
@@ -157,14 +158,14 @@ app.get('/api/results', async (req, res) => {
             const pMax = cfg.prac_max != null ? Number(cfg.prac_max) : 0;
             const subMax = tMax + pMax;
 
-            if (pMax > 0) hasPractical = true;
+            if (!isAggregated && pMax > 0) hasPractical = true;
             if (sm.is_enrolled === false) continue;
 
-            let tObt = 0, pObt = 0, total = 0;
-            if (isCalculated && sm.tgt_has_mark !== undefined) {
-                tObt = sm.tgt_th || 0; pObt = sm.tgt_pr || 0; total = sm.total || (tObt + pObt);
+            let total = 0;
+            if (isAggregated) {
+                total = sm.total || 0;
             } else if (sm.th !== undefined || sm.pr !== undefined) {
-                tObt = sm.th || 0; pObt = sm.pr || 0; total = sm.total || (tObt + pObt);
+                total = sm.total || ((sm.th || 0) + (sm.pr || 0));
             } else {
                 total = sm.total || 0;
             }
@@ -174,7 +175,13 @@ app.get('/api/results', async (req, res) => {
             if (pct >= 90) grade = 'A+'; else if (pct >= 80) grade = 'A'; else if (pct >= 70) grade = 'B+';
             else if (pct >= 60) grade = 'B'; else if (pct >= 50) grade = 'C'; else if (pct >= 30) grade = 'D';
 
-            marksList.push({ subject: sub.name, theory: tObt, theoryMax: tMax, practical: pObt, practicalMax: pMax, total: Math.round(total * 10) / 10, maxTotal: subMax, grade });
+            if (isAggregated) {
+                marksList.push({ subject: sub.name, total: Math.round(total * 10) / 10, maxTotal: subMax, grade });
+            } else {
+                const tObt = sm.th || 0;
+                const pObt = sm.pr || 0;
+                marksList.push({ subject: sub.name, theory: tObt, theoryMax: tMax, practical: pObt, practicalMax: pMax, total: Math.round(total * 10) / 10, maxTotal: subMax, grade });
+            }
             grandTotalObt += total; grandTotalMax += subMax;
         }
 
@@ -199,6 +206,7 @@ app.get('/api/results', async (req, res) => {
             sessionName: activeSession.session_name, examName: exam.name,
             marks: marksList,
             hasPractical,
+            isAggregated,
             grandTotal: Math.round(grandTotalObt * 10) / 10,
             grandTotalMax: Math.round(grandTotalMax * 10) / 10,
             percentage, division, status, photo: photoUrl, promoStatus, promoRemarks
