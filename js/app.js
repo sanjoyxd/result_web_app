@@ -28,6 +28,8 @@
         resultAvatar: $('resultAvatar'),
         marksBody: $('marksBody'),
         marksTable: $('marksTable'),
+        thTheory: $('thTheory'),
+        thPractical: $('thPractical'),
         resultObtained: $('resultObtained'),
         resultPercentage: $('resultPercentage'),
         resultDivision: $('resultDivision'),
@@ -254,28 +256,32 @@
         }
 
         dom.marksTable.classList.remove('hidden');
+        const showPractical = !!data.hasPractical;
+        dom.thTheory.classList.toggle('hidden', !showPractical);
+        dom.thPractical.classList.toggle('hidden', !showPractical);
 
         marks.forEach((m, i) => {
             const subject = m.subject || m.subject_name || m.name || '';
-            const theory = m.theory ?? m.th ?? m.theory_obtained ?? '';
-            const practical = m.practical ?? m.pr ?? m.practical_obtained ?? '';
             const total = m.total ?? m.subject_total_obt ?? m.totalObtained ?? '';
             const maxTotal = m.maxTotal || m.subject_total_max || m.totalMax || '';
             const grade = m.grade || '';
-            const tMax = m.theoryMax ?? m.t_max ?? '';
-            const pMax = m.practicalMax ?? m.p_max ?? '';
 
             const tr = document.createElement('tr');
             tr.className = 'mark-row border-b border-slate-50 last:border-0';
             tr.style.animationDelay = `${i * 50}ms`;
 
-            tr.innerHTML = `
-                <td class="px-6 py-3 font-medium text-slate-700">${subject}</td>
-                <td class="px-4 py-3 text-center text-slate-600">${formatMark(theory, tMax)}</td>
-                <td class="px-4 py-3 text-center text-slate-600">${formatMark(practical, pMax)}</td>
-                <td class="px-4 py-3 text-center font-semibold text-slate-800">${formatMark(total, maxTotal)}</td>
-                <td class="px-6 py-3 text-center"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${gradeClass(grade)}">${grade}</span></td>
-            `;
+            let cells = `<td class="px-6 py-3 font-medium text-slate-700">${subject}</td>`;
+            if (showPractical) {
+                const theory = m.theory ?? m.th ?? m.theory_obtained ?? '';
+                const practical = m.practical ?? m.pr ?? m.practical_obtained ?? '';
+                const tMax = m.theoryMax ?? m.t_max ?? '';
+                const pMax = m.practicalMax ?? m.p_max ?? '';
+                cells += `<td class="px-4 py-3 text-center text-slate-600">${formatMark(theory, tMax)}</td>`;
+                cells += `<td class="px-4 py-3 text-center text-slate-600">${formatMark(practical, pMax)}</td>`;
+            }
+            cells += `<td class="px-4 py-3 text-center font-semibold text-slate-800">${formatMark(total, maxTotal)}</td>`;
+            cells += `<td class="px-6 py-3 text-center"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${gradeClass(grade)}">${grade}</span></td>`;
+            tr.innerHTML = cells;
 
             dom.marksBody.appendChild(tr);
         });

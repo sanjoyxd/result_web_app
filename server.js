@@ -148,13 +148,16 @@ app.get('/api/results', async (req, res) => {
         const marksList = [];
         let grandTotalObt = 0, grandTotalMax = 0;
 
+        let hasPractical = false;
+
         for (const sub of subjects) {
             const sm = studentMarks[String(sub.id)] || {};
             const cfg = configMap[String(sub.id)] || {};
-            const tMax = cfg.theory_max || 80;
-            const pMax = cfg.prac_max || 20;
+            const tMax = cfg.theory_max != null ? Number(cfg.theory_max) : 0;
+            const pMax = cfg.prac_max != null ? Number(cfg.prac_max) : 0;
             const subMax = tMax + pMax;
 
+            if (pMax > 0) hasPractical = true;
             if (sm.is_enrolled === false) continue;
 
             let tObt = 0, pObt = 0, total = 0;
@@ -195,6 +198,7 @@ app.get('/api/results', async (req, res) => {
             studentName: student.name, studentId: student.student_id, className,
             sessionName: activeSession.session_name, examName: exam.name,
             marks: marksList,
+            hasPractical,
             grandTotal: Math.round(grandTotalObt * 10) / 10,
             grandTotalMax: Math.round(grandTotalMax * 10) / 10,
             percentage, division, status, photo: photoUrl, promoStatus, promoRemarks
