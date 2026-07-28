@@ -303,20 +303,20 @@
     }
 
     function renderPromotion(data) {
-        const promoStatus = data.promo_status || data.promotionStatus || data.promotion_status || '';
-        if (!promoStatus) {
+        const ps = data.promoStatus || data.promo_status || data.promotionStatus || '';
+        if (!ps || ps === 'PENDING') {
             dom.promoCard.classList.add('hidden');
             return;
         }
 
         dom.promoCard.classList.remove('hidden');
-        dom.promoStatus.textContent = promoStatus;
+        dom.promoStatus.textContent = ps;
 
-        const isPromoted = promoStatus.toUpperCase().includes('PROMOTED');
+        const isPromoted = ps.toUpperCase().includes('PROMOTED');
         dom.promoStatus.className = 'text-sm font-semibold mt-1 ' +
             (isPromoted ? 'text-emerald-700' : 'text-red-600');
 
-        const remarks = data.promo_remarks || data.promotionRemarks || data.promotion_remarks || '';
+        const remarks = data.promoRemarks || data.promo_remarks || data.promotionRemarks || '';
         dom.promoRemarks.textContent = remarks;
 
         const totalDays = data.total_working_days || data.totalWorkingDays || 0;
