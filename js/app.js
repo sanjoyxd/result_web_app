@@ -54,6 +54,7 @@
         verifyClass: $('verifyClass'),
         verifyExam: $('verifyExam'),
         verifyStudentId: $('verifyStudentId'),
+        verifyFormCard: $('verifyFormCard'),
         schoolLogo: $('schoolLogo'),
         logoPlaceholder: $('logoPlaceholder'),
         schoolName: $('schoolName'),
@@ -92,7 +93,7 @@
 
             const logo = settings.logo || settings.school_logo;
             if (logo) {
-                const logoUrl = logo.startsWith('http') ? logo : logo;
+                const logoUrl = logo.startsWith('http') ? logo : `/static/uploads/settings/${logo}`;
                 dom.schoolLogo.src = logoUrl;
                 dom.schoolLogo.classList.remove('hidden');
                 dom.logoPlaceholder.classList.add('hidden');
@@ -369,14 +370,14 @@
         dom.verifyExam.textContent = data.exam_name || data.examName || '';
         dom.verifyStudentId.textContent = data.student_id || data.studentId || '';
 
-        dom.verifyForm.parentElement.classList.add('hidden');
+        dom.verifyFormCard.classList.add('hidden');
         dom.verifyResult.classList.remove('hidden');
     }
 
     window.resetVerify = function() {
         dom.verifyForm.reset();
         dom.verifyError.classList.add('hidden');
-        dom.verifyForm.parentElement.classList.remove('hidden');
+        dom.verifyFormCard.classList.remove('hidden');
         dom.verifyResult.classList.add('hidden');
     };
 
