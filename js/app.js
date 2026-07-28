@@ -415,11 +415,11 @@
         html5QrCode.start(
             { facingMode: 'environment' },
             { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 },
-            async (decodedText) => {
+            (decodedText) => {
                 stopScanner();
-                showVerifyError('QR scanned! Verifying...');
+                showVerifyError('QR scanned! Redirecting...');
                 const token = extractTokenFromUrl(decodedText);
-                await verify(token);
+                window.location.href = `/verify-marksheet/${token}`;
             },
             () => {}
         ).catch(() => {
