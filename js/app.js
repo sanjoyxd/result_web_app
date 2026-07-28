@@ -404,7 +404,7 @@
     let html5QrCode = null;
 
     function extractTokenFromUrl(text) {
-        const match = text.match(/\/verify-marksheet\/([^/?#]+)/);
+        const match = text.match(/\/(?:verify|verify-marksheet)\/([^/?#]+)/);
         return match ? decodeURIComponent(match[1]) : text.trim();
     }
 
