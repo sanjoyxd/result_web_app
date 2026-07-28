@@ -93,17 +93,21 @@ app.get('/api/results', async (req, res) => {
         const headers = authHeaders();
         const examId = parseInt(examType);
 
-        // 1. Find student
+        // 1. Find student (list endpoint lacks DOB, so fetch detail too)
         const stuR = await fetch(`${API_BASE}/api/students/?search=${encodeURIComponent(studentId)}`, { headers });
         const stuD = await stuR.json();
-        const student = (stuD.data || []).find(s => s.student_id === studentId);
-        if (!student) return res.status(404).json({ success: false, message: 'Student not found.' });
+        const stub = (stuD.data || []).find(s => s.student_id === studentId);
+        if (!stub) return res.status(404).json({ success: false, message: 'Student not found.' });
 
-        // 2. Verify DOB (just compare the first 10 chars of whatever format)
+        const detR = await fetch(`${API_BASE}/api/students/${stub.id}`, { headers });
+        const detD = await detR.json();
+        const student = detD.data || detD;
+
+        // 2. Verify DOB
         const apiDob = String(student.dob || '').slice(0, 10);
         const reqDob = String(dob || '').slice(0, 10);
         if (apiDob !== reqDob) {
-            console.error(`[API] DOB mismatch: API="${apiDob}" Request="${reqDob}" raw_api="${student.dob}"`);
+            console.error(`[API] DOB mismatch: API="${apiDob}" Request="${reqDob}" raw="${student.dob}"`);
             return res.status(404).json({ success: false, message: 'Date of birth does not match.' });
         }
 
@@ -113,10 +117,8 @@ app.get('/api/results', async (req, res) => {
         const activeSession = (sessD.data || []).find(s => s.is_active);
         if (!activeSession) return res.status(404).json({ success: false, message: 'No active session.' });
 
-        // 4. Get student detail for enrollments
-        const detR = await fetch(`${API_BASE}/api/students/${student.id}`, { headers });
-        const detD = await detR.json();
-        const enrollments = detD.data?.enrollments || detD.enrollments || [];
+        // 4. Find enrollment from already-fetched student detail
+        const enrollments = student.enrollments || [];
 
         let enrollment = null;
         let className = null;
