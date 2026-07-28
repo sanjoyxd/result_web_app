@@ -101,7 +101,9 @@ app.get('/api/results', async (req, res) => {
 
         const detR = await fetch(`${API_BASE}/api/students/${stub.id}`, { headers });
         const detD = await detR.json();
-        const student = detD.data || detD;
+        const detail = detD.data || detD;
+        const student = detail.student || detail;
+        const className = detail.current_class || null;
 
         // 2. Verify DOB
         const apiDob = String(student.dob || '').slice(0, 10);
@@ -117,23 +119,15 @@ app.get('/api/results', async (req, res) => {
         const activeSession = (sessD.data || []).find(s => s.is_active);
         if (!activeSession) return res.status(404).json({ success: false, message: 'No active session.' });
 
-        // 4. Find enrollment from already-fetched student detail
-        const enrollments = student.enrollments || [];
+        if (!className) return res.status(404).json({ success: false, message: 'No class assignment found.' });
 
-        let enrollment = null;
-        let className = null;
-        for (const en of enrollments) {
-            if (en.session_id === activeSession.id) { enrollment = en; className = en.class_name; break; }
-        }
-        if (!enrollment) return res.status(404).json({ success: false, message: 'No enrollment found for the active session.' });
-
-        // 5. Exam details
+        // 4. Exam details
         const exR = await fetch(`${API_BASE}/api/exams/${examId}`, { headers });
         const exD = await exR.json();
         const exam = exD.data || exD;
         if (!exam || !exam.is_published) return res.status(404).json({ success: false, message: 'Exam not found or not published.' });
 
-        // 6. Consolidated marks
+        // 5. Consolidated marks
         const consR = await fetch(`${API_BASE}/api/marks/consolidated/${encodeURIComponent(className)}/${examId}`, { headers });
         const consD = await consR.json();
         if (!consD.success) return res.status(404).json({ success: false, message: 'Marks data not available.' });
@@ -144,7 +138,13 @@ app.get('/api/results', async (req, res) => {
         const configMap = consolidated.config_map || {};
         const isCalculated = exam.is_calculated || false;
 
-        const studentMarks = matrix[String(enrollment.id)] || {};
+        // 6. Find enrollment ID from consolidated students list
+        const consStudents = consolidated.students || [];
+        const match = consStudents.find(s => s.student_id === studentId);
+        if (!match) return res.status(404).json({ success: false, message: 'Enrollment not found in this exam.' });
+        const enrollmentId = match.id;
+
+        const studentMarks = matrix[String(enrollmentId)] || {};
         const marksList = [];
         let grandTotalObt = 0, grandTotalMax = 0;
 
@@ -185,7 +185,7 @@ app.get('/api/results', async (req, res) => {
         try {
             const pR = await fetch(`${API_BASE}/api/academics/promotions/${encodeURIComponent(className)}`, { headers });
             const pD = await pR.json();
-            const promo = (pD.data || []).find(p => String(p.enrollment_id) === String(enrollment.id));
+            const promo = (pD.data || []).find(p => String(p.enrollment_id) === String(enrollmentId));
             if (promo) { promoStatus = promo.status || 'PENDING'; promoRemarks = promo.remarks || ''; }
         } catch {}
 
