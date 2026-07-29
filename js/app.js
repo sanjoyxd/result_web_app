@@ -279,6 +279,7 @@
     function renderMarksTable(data) {
         dom.marksBody.innerHTML = '';
         let marks = data.marks || data.report_data || data.subjects || [];
+        let coScholastic = data.coScholastic || data.co_scholastic_data || [];
 
         if (!Array.isArray(marks) || marks.length === 0) {
             dom.marksTable.classList.add('hidden');
@@ -292,7 +293,7 @@
 
         marks.forEach((m, i) => {
             const subject = m.subject || m.subject_name || m.name || '';
-            const total = m.total ?? m.subject_total_obt ?? m.totalObtained ?? '';
+            const total = m.is_absent ? 'AB' : (m.total ?? m.subject_total_obt ?? m.totalObtained ?? '');
             const maxTotal = m.maxTotal || m.subject_total_max || m.totalMax || '';
             const grade = m.grade || '';
 
@@ -302,10 +303,10 @@
 
             let cells = `<td class="px-6 py-3 font-medium text-slate-700">${subject}</td>`;
             if (showPractical) {
-                const theory = m.theory ?? m.th ?? m.theory_obtained ?? '';
-                const practical = m.practical ?? m.pr ?? m.practical_obtained ?? '';
-                const tMax = m.theoryMax ?? m.t_max ?? '';
-                const pMax = m.practicalMax ?? m.p_max ?? '';
+                const theory = m.is_absent ? 'AB' : (m.theory ?? m.th ?? m.theory_obtained ?? m.final_t_obt ?? '');
+                const practical = m.is_absent ? 'AB' : (m.practical ?? m.pr ?? m.practical_obtained ?? m.final_p_obt ?? '');
+                const tMax = m.theoryMax ?? m.t_max ?? m.final_t_max ?? '';
+                const pMax = m.practicalMax ?? m.p_max ?? m.final_p_max ?? '';
                 cells += `<td class="px-4 py-3 text-center text-slate-600">${formatMark(theory, tMax)}</td>`;
                 cells += `<td class="px-4 py-3 text-center text-slate-600">${formatMark(practical, pMax)}</td>`;
             }
@@ -315,10 +316,36 @@
 
             dom.marksBody.appendChild(tr);
         });
+
+        if (coScholastic && coScholastic.length > 0) {
+            const trHeader = document.createElement('tr');
+            trHeader.className = 'bg-slate-50';
+            trHeader.innerHTML = `<td colspan="100%" class="px-6 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Co-Scholastic Area</td>`;
+            dom.marksBody.appendChild(trHeader);
+
+            coScholastic.forEach((m, i) => {
+                const subject = m.subject || m.subject_name || m.name || '';
+                const grade = m.is_absent ? 'AB' : (m.grade || '');
+                const tr = document.createElement('tr');
+                tr.className = 'mark-row border-b border-slate-50 last:border-0';
+                tr.style.animationDelay = `${(marks.length + i) * 50}ms`;
+
+                let cells = `<td class="px-6 py-3 font-medium text-slate-700">${subject}</td>`;
+                if (showPractical) {
+                    cells += `<td class="px-4 py-3 text-center text-slate-400">-</td>`;
+                    cells += `<td class="px-4 py-3 text-center text-slate-400">-</td>`;
+                }
+                cells += `<td class="px-4 py-3 text-center text-slate-400">-</td>`;
+                cells += `<td class="px-6 py-3 text-center"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${gradeClass(grade)}">${grade}</span></td>`;
+                tr.innerHTML = cells;
+                dom.marksBody.appendChild(tr);
+            });
+        }
     }
 
     function formatMark(obt, max) {
         if (obt === '' || obt === null || obt === undefined) return '-';
+        if (obt === 'AB') return '<span class="text-red-500 font-bold">AB</span>';
         const val = Number(obt);
         if (isNaN(val)) return '-';
         if (max) return `${val} <span class="text-slate-400 text-xs">/ ${max}</span>`;
