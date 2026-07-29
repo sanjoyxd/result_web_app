@@ -75,13 +75,13 @@
                         <p class="text-[11px] text-slate-400 font-medium tracking-wide uppercase">Results Portal</p>
                     </div>
                 </div>
-                <nav class="flex bg-slate-100/80 rounded-lg p-0.5">
+                <nav class="flex bg-slate-100/80 rounded-lg p-0.5" style="display: none;">
                     <button id="navResult" onclick="navigateTo('result')"
-                        class="nav-btn active px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
+                        class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
                         <i class="fas fa-search mr-1.5"></i>Result
                     </button>
                     <button id="navVerify" onclick="navigateTo('verify')"
-                        class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
+                        class="nav-btn active px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200">
                         <i class="fas fa-shield-halved mr-1.5"></i>Verify
                     </button>
                 </nav>
@@ -92,7 +92,7 @@
         <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 pb-4">
 
             <!-- ==================== RESULT LOOKUP PAGE ==================== -->
-            <section id="pageResult" class="page-content">
+            <section id="pageResult" class="page-content hidden">
 
                 <!-- Hero Banner -->
                 <div
@@ -312,13 +312,10 @@
                                             id="promoDays"></span></span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
             </section>
 
-            <!-- ==================== VERIFY PAGE ==================== -->
-            <section id="pageVerify" class="page-content hidden">
+            <!-- ==================== VERIFICATION PAGE ==================== -->
+            <section id="pageVerify" class="page-content">
 
                 <!-- Verify Hero -->
                 <div

@@ -461,8 +461,7 @@
         const onSuccess = (decodedText) => {
             stopScanner();
             showVerifyError('QR scanned! Redirecting...');
-            const token = extractTokenFromUrl(decodedText);
-            window.location.href = `/verify-marksheet/${token}`;
+            window.location.href = decodedText;
         };
 
         html5QrCode.start({ facingMode: 'environment' }, config, onSuccess, () => {})
