@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const API_BASE = process.env.API_BASE_URL || 'https://api.abasss.org';
 const crypto = require('crypto');
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
-const SERVICE_USER_ID = process.env.SERVICE_USER_ID || '1';
+const SERVICE_USER_ID = process.env.SERVICE_USER_ID || '999999';
 const SERVICE_ROLE = process.env.SERVICE_ROLE || 'Teacher';
 const SERVICE_EMAIL = process.env.SERVICE_EMAIL || 'service@abasss.org';
 
