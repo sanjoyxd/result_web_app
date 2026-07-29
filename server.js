@@ -10,9 +10,10 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_BASE = process.env.API_BASE_URL || 'https://api.abasss.org';
-const JWT_SECRET = process.env.JWT_SECRET || 'aba_super_secret_session_key_2026';
+const crypto = require('crypto');
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
 const SERVICE_USER_ID = process.env.SERVICE_USER_ID || '1';
-const SERVICE_ROLE = process.env.SERVICE_ROLE || 'Admin';
+const SERVICE_ROLE = process.env.SERVICE_ROLE || 'Teacher';
 const SERVICE_EMAIL = process.env.SERVICE_EMAIL || 'service@abasss.org';
 
 app.use(compression());
@@ -240,15 +241,7 @@ app.get('/api/reports/verify/:token', async (req, res) => {
     }
 });
 
-// ---- Static files proxy ----
-app.use('/static', async (req, res) => {
-    try {
-        const r = await fetch(`${API_BASE}/static${req.url}`);
-        res.setHeader('Content-Type', r.headers.get('content-type') || 'application/octet-stream');
-        res.setHeader('Cache-Control', 'public, max-age=86400');
-        r.body.pipe(res);
-    } catch { res.status(404).end(); }
-});
+// Proxy removed to avoid duplication
 
 // ---- PDF serving: pre-generated first, on-the-fly fallback ----
 app.get('/api/pdf/:examId/:studentId', async (req, res) => {
