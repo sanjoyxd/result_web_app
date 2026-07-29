@@ -430,20 +430,24 @@
         dom.qrScannerOverlay.classList.remove('hidden');
         if (!html5QrCode) html5QrCode = new Html5Qrcode('qrReader');
 
-        html5QrCode.start(
-            { facingMode: 'environment' },
-            { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 },
-            (decodedText) => {
-                stopScanner();
-                showVerifyError('QR scanned! Redirecting...');
-                const token = extractTokenFromUrl(decodedText);
-                window.location.href = `/verify-marksheet/${token}`;
-            },
-            () => {}
-        ).catch(() => {
-            showVerifyError('Camera access denied or not available.');
+        const config = { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 };
+        const onSuccess = (decodedText) => {
             stopScanner();
-        });
+            showVerifyError('QR scanned! Redirecting...');
+            const token = extractTokenFromUrl(decodedText);
+            window.location.href = `/verify-marksheet/${token}`;
+        };
+
+        html5QrCode.start({ facingMode: 'environment' }, config, onSuccess, () => {})
+            .catch(() => {
+                // Fallback to user camera if environment camera is missing
+                html5QrCode.start({ facingMode: 'user' }, config, onSuccess, () => {})
+                    .catch((err) => {
+                        console.error(err);
+                        showVerifyError('Camera access denied, unavailable, or requires HTTPS.');
+                        stopScanner();
+                    });
+            });
     }
 
     function stopScanner() {
