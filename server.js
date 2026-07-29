@@ -196,12 +196,17 @@ app.get('/api/results', async (req, res) => {
         const status = percentage >= 30 ? 'Pass' : 'Fail';
 
         // 7. Promotion
-        let promoStatus = 'PENDING', promoRemarks = '';
+        let promoStatus = 'PENDING', promoRemarks = '', total_working_days = 0, days_present = 0;
         try {
             const pR = await fetch(`${API_BASE}/api/academics/promotions/${encodeURIComponent(className)}`, { headers });
             const pD = await pR.json();
             const promo = (pD.data || []).find(p => String(p.enrollment_id) === String(enrollmentId));
-            if (promo) { promoStatus = promo.status || 'PENDING'; promoRemarks = promo.remarks || ''; }
+            if (promo) { 
+                promoStatus = promo.status || 'PENDING'; 
+                promoRemarks = promo.remarks || ''; 
+                total_working_days = promo.total_working_days || 0;
+                days_present = promo.days_present || 0;
+            }
         } catch {}
 
         const photoUrl = student.photo ? `/static/uploads/students/${student.photo}` : '';
@@ -214,7 +219,8 @@ app.get('/api/results', async (req, res) => {
             isAggregated,
             grandTotal: Math.round(grandTotalObt * 10) / 10,
             grandTotalMax: Math.round(grandTotalMax * 10) / 10,
-            percentage, division, status, photo: photoUrl, promoStatus, promoRemarks
+            percentage, division, status, photo: photoUrl, promoStatus, promoRemarks,
+            total_working_days, days_present
         });
     } catch (err) {
         console.error('[API] /api/results:', err.message);

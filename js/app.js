@@ -19,7 +19,9 @@
         resetBtn: $('resetBtn'),
         downloadBtn: $('downloadBtn'),
         studentId: $('studentId'),
-        dob: $('dob'),
+        dobDay: $('dobDay'),
+        dobMonth: $('dobMonth'),
+        dobYear: $('dobYear'),
         examType: $('examType'),
         resultName: $('resultName'),
         resultMeta: $('resultMeta'),
@@ -69,6 +71,22 @@
        ============================================================ */
     async function init() {
         dom.footerYear.textContent = new Date().getFullYear();
+        
+        // Populate DOB dropdowns
+        let dayHtml = '<option value="" disabled selected>Day</option>';
+        for(let i=1; i<=31; i++) {
+            const val = i.toString().padStart(2, '0');
+            dayHtml += `<option value="${val}">${val}</option>`;
+        }
+        if (dom.dobDay) dom.dobDay.innerHTML = dayHtml;
+
+        let yearHtml = '<option value="" disabled selected>Year</option>';
+        const currentYear = new Date().getFullYear();
+        for(let i=currentYear - 30; i<=currentYear; i++) {
+            yearHtml += `<option value="${i}">${i}</option>`;
+        }
+        if (dom.dobYear) dom.dobYear.innerHTML = yearHtml;
+
         loadSchoolSettings();
         loadExams();
 
@@ -160,11 +178,11 @@
     dom.searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const studentId = dom.studentId.value.trim();
-        const dob = dom.dob.value;
+        const studentId = dom.studentId.value.trim().toUpperCase();
+        const dob = `${dom.dobYear.value}-${dom.dobMonth.value}-${dom.dobDay.value}`;
         const examType = dom.examType.value;
 
-        if (!studentId || !dob || !examType) {
+        if (!studentId || !dom.dobYear.value || !dom.dobMonth.value || !dom.dobDay.value || !examType) {
             showError('Please fill in all fields.');
             return;
         }

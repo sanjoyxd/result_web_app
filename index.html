@@ -134,16 +134,40 @@
                         </div>
 
                         <div>
-                            <label for="dob"
-                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Date of
-                                Birth</label>
-                            <div class="relative">
-                                <span
-                                    class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                                    <i class="fas fa-calendar-days text-sm"></i>
-                                </span>
-                                <input type="date" id="dob" required
-                                    class="input-field w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 placeholder-slate-300 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400 outline-none transition-all duration-200">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Date of Birth</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="relative">
+                                    <select id="dobDay" required class="input-field w-full px-3 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400 outline-none transition-all duration-200 appearance-none">
+                                        <option value="" disabled selected>Day</option>
+                                        <!-- Javascript will populate 1-31 -->
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <select id="dobMonth" required class="input-field w-full px-3 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400 outline-none transition-all duration-200 appearance-none">
+                                        <option value="" disabled selected>Month</option>
+                                        <option value="01">Jan</option><option value="02">Feb</option>
+                                        <option value="03">Mar</option><option value="04">Apr</option>
+                                        <option value="05">May</option><option value="06">Jun</option>
+                                        <option value="07">Jul</option><option value="08">Aug</option>
+                                        <option value="09">Sep</option><option value="10">Oct</option>
+                                        <option value="11">Nov</option><option value="12">Dec</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <select id="dobYear" required class="input-field w-full px-3 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400 outline-none transition-all duration-200 appearance-none">
+                                        <option value="" disabled selected>Year</option>
+                                        <!-- Javascript will populate years -->
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
