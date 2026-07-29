@@ -299,6 +299,12 @@ app.get('/api/pdf/:examId/:studentId', async (req, res) => {
 
         if (!className) return res.status(404).json({ success: false, message: 'No class assignment found.' });
 
+        // 1.5 Verify exam is published
+        const exR = await fetch(`${API_BASE}/api/exams/${examId}`, { headers });
+        const exD = await exR.json();
+        const exam = exD.data || exD;
+        if (!exam || !exam.is_published) return res.status(403).json({ success: false, message: 'Exam results are not published yet.' });
+
         // 2. Fetch marks to get enrollment ID
         const consR = await fetch(`${API_BASE}/api/marks/consolidated/${encodeURIComponent(className)}/${examId}`, { headers });
         const consD = await consR.json();
