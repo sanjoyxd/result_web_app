@@ -317,7 +317,13 @@ app.get('/verify-marksheet/:token', async (req, res) => {
 // ---- Static files proxy ----
 app.use('/static', async (req, res) => {
     try {
-        const r = await fetch(`${API_BASE}/static${req.url}`);
+        const r = await fetch(`${API_BASE}/static${req.url}`, {
+            headers: {
+                'User-Agent': req.headers['user-agent'] || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                'Accept': req.headers['accept'] || 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                'Referer': req.headers['referer'] || 'https://result.abasss.org/'
+            }
+        });
         if (!r.ok) return res.status(r.status).end();
         res.setHeader('Content-Type', r.headers.get('content-type') || 'application/octet-stream');
         res.setHeader('Cache-Control', 'public, max-age=86400');
