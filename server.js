@@ -107,11 +107,14 @@ app.get('/api/results', async (req, res) => {
         const student = detail.student || detail;
         const className = detail.current_class || null;
 
-        // 2. Verify DOB
-        const apiDob = String(student.dob || '').slice(0, 10);
-        const reqDob = String(dob || '').slice(0, 10);
-        if (apiDob !== reqDob) {
-            console.error(`[API] DOB mismatch: API="${apiDob}" Request="${reqDob}" raw="${student.dob}"`);
+        // 2. Verify DOB Robustly
+        const apiDobObj = new Date(student.dob || '');
+        const reqDobObj = new Date(dob || '');
+        const apiDobStr = !isNaN(apiDobObj) ? apiDobObj.toISOString().slice(0, 10) : '';
+        const reqDobStr = !isNaN(reqDobObj) ? reqDobObj.toISOString().slice(0, 10) : '';
+
+        if (!apiDobStr || !reqDobStr || apiDobStr !== reqDobStr) {
+            console.error(`[API] DOB mismatch: API="${apiDobStr}" Request="${reqDobStr}" raw="${student.dob}"`);
             return res.status(404).json({ success: false, message: 'Date of birth does not match.' });
         }
 
