@@ -460,8 +460,18 @@
         const config = { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1 };
         const onSuccess = (decodedText) => {
             stopScanner();
-            showVerifyError('QR scanned! Redirecting...');
-            window.location.href = decodedText;
+            const token = extractTokenFromUrl(decodedText);
+            if (token && token !== decodedText) {
+                showVerifyError('Verifying...');
+                verify(token);
+            } else {
+                if (decodedText.startsWith('http')) {
+                    showVerifyError('Redirecting...');
+                    window.location.href = decodedText;
+                } else {
+                    showVerifyError('Invalid QR Code.');
+                }
+            }
         };
 
         html5QrCode.start({ facingMode: 'environment' }, config, onSuccess, () => {})
