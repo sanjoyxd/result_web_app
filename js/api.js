@@ -32,7 +32,7 @@ const api = {
         return json;
     },
 
-    getPdfUrl(examId, studentId) {
+    getPdfUrl(examId, studentId, dob) {
         return `/api/pdf/${examId}/${encodeURIComponent(studentId)}`;
     },
 

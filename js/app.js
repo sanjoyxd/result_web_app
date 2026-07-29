@@ -264,7 +264,7 @@
 
         // PDF download
         const pdfUrl = data.pdfDownloadUrl || data.pdf_url ||
-            api.getPdfUrl(examId, studentId);
+            api.getPdfUrl(examId, studentId, state.dob);
         dom.downloadBtn.href = pdfUrl;
 
         // Promotion info
@@ -397,7 +397,7 @@
             const examId = data.exam_id || data.examId;
             const studentId = data.student_id || data.studentId;
             if (examId && studentId) {
-                verifyPdfBtn.href = api.getPdfUrl(examId, studentId);
+                verifyPdfBtn.href = /api/pdf/verify/;
                 verifyPdfBtn.classList.remove('hidden');
             } else {
                 verifyPdfBtn.classList.add('hidden');

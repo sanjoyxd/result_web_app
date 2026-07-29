@@ -250,26 +250,77 @@ app.get('/api/reports/verify/:token', async (req, res) => {
     }
 });
 
+// ---- Secure PDF Download via Token ----
+app.get('/api/pdf/verify/:token', async (req, res) => {
+    try {
+        const r = await fetch(`${API_BASE}/api/reports/verify-pdf/${req.params.token}`);
+        if (r.ok) {
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `inline; filename=Report_Verified.pdf`);
+            return r.body.pipe(res);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    res.status(404).send('PDF not found or token expired');
+});
+
 // Proxy removed to avoid duplication
 
-// ---- PDF serving: pre-generated first, on-the-fly fallback ----
+// ---- Secure On-the-Fly PDF Proxy ----
 app.get('/api/pdf/:examId/:studentId', async (req, res) => {
     const { examId, studentId } = req.params;
+    const dob = req.query.dob;
+    if (!dob) return res.status(403).json({ success: false, message: 'Date of birth is required for security verification.' });
+
     const headers = authHeaders();
 
-    // 1. Try pre-generated static PDF (fast, served from disk)
     try {
-        const staticR = await fetch(`${API_BASE}/api/reports/static/${examId}/${encodeURIComponent(studentId)}`);
-        if (staticR.ok) {
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Cache-Control', 'public, max-age=86400');
-            res.setHeader('Content-Disposition', `inline; filename=ABA_${studentId}.pdf`);
-            return staticR.body.pipe(res);
-        }
-    } catch {}
+        // 1. Verify student and DOB
+        const stuR = await fetch(`${API_BASE}/api/students/?search=${encodeURIComponent(studentId)}`, { headers });
+        const stuD = await stuR.json();
+        const stub = (stuD.data || []).find(s => s.student_id === studentId);
+        if (!stub) return res.status(404).json({ success: false, message: 'Student not found.' });
 
-    // 2. If static PDF not found, do not generate on the fly to prevent bottleneck
-    return res.status(404).json({ success: false, message: 'Result PDF has not been published yet.' });
+        const detR = await fetch(`${API_BASE}/api/students/${stub.id}`, { headers });
+        const detD = await detR.json();
+        const detail = detD.data || detD;
+        const student = detail.student || detail;
+        const className = detail.current_class || null;
+
+        const apiDobObj = new Date(student.dob || '');
+        const reqDobObj = new Date(dob || '');
+        const apiDobStr = !isNaN(apiDobObj) ? apiDobObj.toISOString().slice(0, 10) : '';
+        const reqDobStr = !isNaN(reqDobObj) ? reqDobObj.toISOString().slice(0, 10) : '';
+
+        if (!apiDobStr || !reqDobStr || apiDobStr !== reqDobStr) {
+            return res.status(403).json({ success: false, message: 'Date of birth does not match.' });
+        }
+
+        if (!className) return res.status(404).json({ success: false, message: 'No class assignment found.' });
+
+        // 2. Fetch marks to get enrollment ID
+        const consR = await fetch(`${API_BASE}/api/marks/consolidated/${encodeURIComponent(className)}/${examId}`, { headers });
+        const consD = await consR.json();
+        if (!consD.success) return res.status(404).json({ success: false, message: 'Marks data not available.' });
+
+        const consStudents = consD.data?.students || [];
+        const match = consStudents.find(s => s.student_id === studentId);
+        if (!match) return res.status(404).json({ success: false, message: 'Enrollment not found in this exam.' });
+
+        // 3. Proxy download from secure admin endpoint
+        const pdfReq = await fetch(`${API_BASE}/api/reports/download-pdf/${match.id}/${examId}`, { headers });
+        if (pdfReq.ok) {
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Content-Disposition', `inline; filename=Report_ABA_${studentId}.pdf`);
+            return pdfReq.body.pipe(res);
+        }
+    } catch (e) {
+        console.error('[API] PDF proxy error:', e.message);
+    }
+
+    return res.status(404).json({ success: false, message: 'Result PDF could not be generated.' });
 });
 
 // ---- Render HTML verification from BaaS ----
