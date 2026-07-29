@@ -33,7 +33,7 @@ const api = {
     },
 
     getPdfUrl(examId, studentId, dob) {
-        return `/api/pdf/${examId}/${encodeURIComponent(studentId)}`;
+        return `/api/pdf/${examId}/${encodeURIComponent(studentId)}?dob=${encodeURIComponent(dob || '')}`;
     },
 
     async verifyMarksheet(token) {
