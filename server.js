@@ -314,6 +314,19 @@ app.get('/verify-marksheet/:token', async (req, res) => {
     }
 });
 
+// ---- Static files proxy ----
+app.use('/static', async (req, res) => {
+    try {
+        const r = await fetch(`${API_BASE}/static${req.url}`);
+        if (!r.ok) return res.status(r.status).end();
+        res.setHeader('Content-Type', r.headers.get('content-type') || 'application/octet-stream');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        r.body.pipe(res);
+    } catch { 
+        res.status(404).end(); 
+    }
+});
+
 // ---- SPA fallback ----
 app.get('*', (req, res) => {
     if (['/api', '/static', '/health'].some(p => req.path.startsWith(p))) return res.status(404).json({ message: 'Not found' });
