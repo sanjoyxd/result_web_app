@@ -191,7 +191,7 @@
 
         try {
             const data = await api.getResult(studentId, dob, examType);
-            renderResult(data, studentId, examType);
+            renderResult(data, studentId, examType, dob);
         } catch (err) {
             showError(err.message);
             shakeCard();
@@ -210,9 +210,9 @@
     });
 
     /* ============================================================
-       Render Result
+       Render Result View
        ============================================================ */
-    function renderResult(data, studentId, examId) {
+    function renderResult(data, studentId, examId, dob) {
         const name = data.studentName || data.student_name || data.name || 'Student';
         const cls = data.className || data.class_name || '';
         const session = data.sessionName || data.session_name || '';
@@ -264,7 +264,7 @@
 
         // PDF download
         const pdfUrl = data.pdfDownloadUrl || data.pdf_url ||
-            api.getPdfUrl(examId, studentId, state.dob);
+            api.getPdfUrl(examId, studentId, dob);
         dom.downloadBtn.href = pdfUrl;
 
         // Promotion info
@@ -372,7 +372,7 @@
         dom.verifyError.classList.add('hidden');
         try {
             const data = await withTimeout(api.verifyMarksheet(token), 20000);
-            renderVerifyResult(data);
+            renderVerifyResult(data, token);
         } catch (err) {
             showVerifyError(err.message);
         }
@@ -385,7 +385,7 @@
         ]);
     }
 
-    function renderVerifyResult(data) {
+    function renderVerifyResult(data, token) {
         dom.verifyStudentName.textContent = data.student_name || data.studentName || '';
         dom.verifyRoll.textContent = data.roll_number || data.rollNumber || '';
         dom.verifyClass.textContent = data.class_name || data.className || '';
@@ -396,8 +396,8 @@
         if (verifyPdfBtn) {
             const examId = data.exam_id || data.examId;
             const studentId = data.student_id || data.studentId;
-            if (examId && studentId) {
-                verifyPdfBtn.href = /api/pdf/verify/;
+            if (examId && studentId && token) {
+                verifyPdfBtn.href = `/api/pdf/verify/${encodeURIComponent(token)}`;
                 verifyPdfBtn.classList.remove('hidden');
             } else {
                 verifyPdfBtn.classList.add('hidden');
